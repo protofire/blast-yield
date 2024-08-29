@@ -17,8 +17,8 @@ import classNames from 'classnames';
 import { useCallback } from 'react';
 import type { BlastYieldResponse } from '@/config/yieldTokens';
 import { ClaimYieldFields } from '@/components/tx-flow/flows/BlastYieldClaim';
-import { AutocompleteItem } from '@/components/tx-flow/flows/BlastYieldClaim/CreateClaimYield';
 import NumberField from '../NumberField';
+import { AutocompleteItem } from '../AutocompleteItem';
 
 export enum YieldAmountFields {
   tokenAddress = 'tokenAddress',
@@ -129,7 +129,6 @@ const BlastYieldAmountInput = ({
           required
         >
           {balances.map((item) => (
-            //TODO add autocomplete
             <MenuItem
               data-testid="token-item"
               key={item.tokenInfo.address}

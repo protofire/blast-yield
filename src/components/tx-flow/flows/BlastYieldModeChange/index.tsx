@@ -1,40 +1,106 @@
-import TxLayout from '@/components/tx-flow/common/TxLayout'
-import useTxStepper from '../../useTxStepper'
-import { ReviewYieldModeChange } from './ReviewYieldModeChange'
-// import SaveAddressIcon from '@/public/images/common/save-address.svg'
-import { SetYieldMode } from './SetYieldMode'
-import type { YieldMode } from '@/config/yieldTokens'
-import type { TokenInfo } from '@safe-global/safe-apps-sdk'
+import TxLayout from '@/components/tx-flow/common/TxLayout';
+import {
+  YIELD_DESCRIPTION,
+  YIELD_LABELS,
+  YieldMode,
+} from '@/config/yieldTokens';
+import type { TokenInfo } from '@safe-global/safe-apps-sdk';
+import TxCard from '@/components/common/TxCard';
+import { encodeChangeYieldMode } from '@/utils/yield';
+import {
+  SelectChangeEvent,
+  Box,
+  Typography,
+  Grid,
+  Select,
+  MenuItem,
+  Divider,
+  Button,
+} from '@mui/material';
+import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk';
+import Link from 'next/link';
+import { useState, useContext, SyntheticEvent } from 'react';
+import { TxModalContext } from '../..';
 
 export type YieldModeChangeProps = {
-  newMode: YieldMode
-  token: TokenInfo
-}
+  newMode: YieldMode;
+  token: TokenInfo;
+};
 
-const YieldModeChangeFlow = (props: YieldModeChangeProps) => {
-  const defaultValues: YieldModeChangeProps = {
-    newMode: props.newMode,
-    token: props.token,
-  }
+const options = [
+  { value: YieldMode.VOID, label: YIELD_LABELS[YieldMode.VOID] },
+  { value: YieldMode.AUTOMATIC, label: YIELD_LABELS[YieldMode.AUTOMATIC] },
+  { value: YieldMode.CLAIMABLE, label: YIELD_LABELS[YieldMode.CLAIMABLE] },
+];
 
-  const { data, step, nextStep, prevStep } = useTxStepper<YieldModeChangeProps>(defaultValues)
+const YieldModeChangeFlow = (params: YieldModeChangeProps) => {
+  const [selectedMode, setSelectedMode] = useState<YieldMode>(
+    params.newMode ?? YieldMode.VOID
+  );
+  const { token } = params;
+  const { sdk } = useSafeAppsSDK();
+  const { setTxFlow } = useContext(TxModalContext);
 
-  const steps = [
-    <SetYieldMode key={0} params={data} onSubmit={(formData: any) => nextStep({ ...data, ...formData })} />,
-    <ReviewYieldModeChange key={1} params={data} />,
-  ]
+  const handleChange = (event: SelectChangeEvent<YieldMode>) => {
+    setSelectedMode(event.target.value as YieldMode);
+  };
 
+  const onSubmitHandler = (e: SyntheticEvent) => {
+    e.preventDefault();
+    const txData = encodeChangeYieldMode(selectedMode, token);
+    sdk.txs.send({ txs: [txData] }).finally(() => {
+      setTxFlow(undefined);
+    });
+  };
   return (
-    <TxLayout
-      title={step === 0 ? 'New transaction' : 'Confirm transaction'}
-      subtitle="Change Yield Mode"
-      // icon={SaveAddressIcon}
-      step={step}
-      onBack={prevStep}
-    >
-      {steps}
-    </TxLayout>
-  )
-}
+    <TxLayout title="Change Yield Mode">
+      <TxCard>
+        <form onSubmit={onSubmitHandler}>
+          <Box my={3}>
+            <Typography variant="h4" fontWeight={700}>
+              Yield Modes
+            </Typography>
+            <Grid container direction="row" alignItems="center" gap={1} mt={2}>
+              <Grid item>
+                <Select value={selectedMode} onChange={handleChange} fullWidth>
+                  {options.map((value, idx) => (
+                    <MenuItem key={idx} value={value.value}>
+                      {value.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item>
+                <Typography variant="body2">
+                  {YIELD_DESCRIPTION[selectedMode]}{' '}
+                  <Link
+                    color="primary"
+                    target="_blank"
+                    href={'https://docs.blast.io/building/guides/eth-yield'}
+                  >
+                    {`Read more`}
+                  </Link>
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
 
-export default YieldModeChangeFlow
+          <Divider />
+
+          <Box my={3}>
+            <Button
+              disabled={params.newMode === selectedMode}
+              data-testid="next-btn"
+              variant="contained"
+              type="submit"
+            >
+              Submit
+            </Button>
+          </Box>
+        </form>
+      </TxCard>
+    </TxLayout>
+  );
+};
+
+export default YieldModeChangeFlow;

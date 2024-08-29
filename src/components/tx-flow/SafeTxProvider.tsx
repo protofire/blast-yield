@@ -23,20 +23,6 @@ const SafeTxProvider = ({ children }: { children: ReactNode }): ReactElement => 
   const [safeMessage, setSafeMessage] = useState<EIP712TypedData>()
   const [safeTxError, setSafeTxError] = useState<Error>()
 
-  // Signed txs cannot be updated
-  const isSigned = safeTx && safeTx.signatures.size > 0
-
-  // Update the tx when the nonce or safeTxGas change
-  useEffect(() => {
-    if (isSigned || !safeTx?.data) return
-
-    // TODO: migrate and use safe app sdk
-    // createTx({ ...safeTx.data, safeTxGas: String(finalSafeTxGas) }, finalNonce)
-    //   .then(setSafeTx)
-    //   .catch(setSafeTxError)
-  }, [isSigned, safeTx?.data])
-
-  // Log errors
   useEffect(() => {
     safeTxError && console.error(safeTxError)
   }, [safeTxError])

@@ -16,23 +16,14 @@ export const TxModalContext = createContext<TxModalContextType>({
   setFullWidth: noop,
 })
 
-// TODO: Rename TxModalProvider, setTxFlow, TxModalDialog to not contain Tx since it can be used for any type of modal as a global provider
-const confirmClose = () => {
-  return confirm('Closing this window will discard your current progress.')
-}
-
 export const TxModalProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const [txFlow, setFlow] = useState<TxModalContextType['txFlow']>(undefined)
   const [fullWidth, setFullWidth] = useState<boolean>(false)
   const shouldWarn = useRef<boolean>(true)
   const onClose = useRef<() => void>(noop)
-  // const safeId = useChainId() + useSafeAddress()
-  // const prevSafeId = useRef<string>(safeId ?? '')
   const pathname = usePathname()
-  // const prevPathname = useRef<string | null>(pathname)
 
   const handleModalClose = useCallback(() => {
-    debugger
     if (shouldWarn.current) {
       shouldWarn.current = false
       return
@@ -42,19 +33,10 @@ export const TxModalProvider = ({ children }: { children: ReactNode }): ReactEle
     setFlow(undefined)
   }, [])
 
-  // Open a new tx flow, close the previous one if any
   const setTxFlow = useCallback(
     (newTxFlow: TxModalContextType['txFlow'], newOnClose?: () => void, newShouldWarn?: boolean) => {
       setFlow((prev) => {
         if (prev === newTxFlow) return prev
-
-        // If a new flow is triggered, close the current one
-        // if (prev && newTxFlow && newTxFlow.type !== SuccessScreenFlow) {
-        //   if (shouldWarn.current && !confirmClose()) {
-        //     return prev
-        //   }
-        //   onClose.current()
-        // }
 
         onClose.current = newOnClose ?? noop
         shouldWarn.current = newShouldWarn ?? true
@@ -65,13 +47,7 @@ export const TxModalProvider = ({ children }: { children: ReactNode }): ReactEle
     [],
   )
 
-  // Close the modal when the user navigates to a different Safe or route
   useEffect(() => {
-    // if (safeId === prevSafeId.current && pathname === prevPathname.current) return
-
-    // prevSafeId.current = safeId
-    // prevPathname.current = pathname
-
     if (txFlow) {
       handleModalClose()
     }

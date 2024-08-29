@@ -152,8 +152,6 @@ export default function Home() {
   const rows = loading
     ? skeletonRows
     : (balances?.items || []).map((item) => {
-        const isNative = isNativeToken(item.tokenInfo);
-
         return {
           key: item.tokenInfo.address,
           cells: {

@@ -10,7 +10,7 @@
 }
 
 .nestedDivider {
-  margin: 0 calc(-1 * var(--space-3));
+  margin: 10px 0;
 }
 
 .form > :global(.MuiFormControl-root) {
