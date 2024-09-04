@@ -8,11 +8,11 @@ import useLoadBlastYield from '@/hooks/useLoadBlastYield';
 import { encodeClaimYield } from '@/utils/yield';
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk';
 import { useContext } from 'react';
-import { SafeTxContext } from '../../SafeTxProvider';
 import commonCss from '@/components/tx-flow/common/styles.module.css';
 import BlastYieldAmountInput, {
   YieldAmountFields,
 } from '@/components/common/TokenAmount/BlastYieldAmountInput';
+import { TxModalContext } from "../..";
 
 enum Fields {
   recipient = 'recipient',
@@ -47,7 +47,7 @@ const ClaimYieldFlow = ({ txNonce, ...props }: ClaimYieldFlowProps) => {
     ...props,
   };
   const { data: balances } = useLoadBlastYield();
-  const { setSafeTx, setSafeTxError } = useContext(SafeTxContext);
+  const { setTxFlow } = useContext(TxModalContext);
   const {
     safe: { safeAddress },
     sdk,
@@ -58,6 +58,8 @@ const ClaimYieldFlow = ({ txNonce, ...props }: ClaimYieldFlowProps) => {
   const formMethods = useForm<ClaimYieldParams>({
     defaultValues: {
       [ClaimYieldFields.amount]: '0',
+      [ClaimYieldFields.recipient]: safeAddress,
+      [ClaimYieldFields.tokenAddress]: params.tokenAddress,
     },
     mode: 'onChange',
     delayError: 500,
@@ -67,9 +69,14 @@ const ClaimYieldFlow = ({ txNonce, ...props }: ClaimYieldFlowProps) => {
     handleSubmit,
     watch,
     formState: { errors },
+    register,
   } = formMethods;
 
+  const recipient = watch(ClaimYieldFields.recipient);
   const tokenAddress = watch(ClaimYieldFields.tokenAddress);
+
+  const isAddressValid = !!recipient && !errors[ClaimYieldFields.recipient];
+
   const selectedToken = balances?.items.find(
     (item) => item.tokenInfo.address === tokenAddress
   );
@@ -83,8 +90,9 @@ const ClaimYieldFlow = ({ txNonce, ...props }: ClaimYieldFlowProps) => {
       token.tokenInfo,
       data.amount
     );
-    alert(txParams);
-    // sdk.txs.send({ txs: [txParams] });
+    sdk.txs.send({ txs: [txParams] }).finally(() => {
+      setTxFlow(undefined);
+    });
   };
 
   return (
@@ -94,10 +102,17 @@ const ClaimYieldFlow = ({ txNonce, ...props }: ClaimYieldFlowProps) => {
           <form onSubmit={handleSubmit(submit)} className={commonCss.form}>
             <FormControl fullWidth sx={{ mt: 1 }}>
               <TextField
-                name={ClaimYieldFields.recipient}
+                label="Recipient address"
                 variant="outlined"
-                disabled
-                value={safeAddress}
+                error={!!errors[ClaimYieldFields.recipient]}
+                helperText={errors[ClaimYieldFields.recipient]?.message}
+                {...register(ClaimYieldFields.recipient, {
+                  required: true,
+                  pattern: {
+                    value: /^0x[a-fA-F0-9]{40}$/,
+                    message: 'Invalid ETH address',
+                  },
+                })}
               />
             </FormControl>
 
@@ -115,7 +130,8 @@ const ClaimYieldFlow = ({ txNonce, ...props }: ClaimYieldFlowProps) => {
                 type="submit"
                 disabled={
                   selectedToken?.mode !== YieldMode.CLAIMABLE ||
-                  !!errors[ClaimYieldFields.amount]
+                  !!errors[ClaimYieldFields.amount] ||
+                  !isAddressValid
                 }
               >
                 Submit
