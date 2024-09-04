@@ -11,14 +11,14 @@ const useTxStepper = <T extends unknown>(initialData: T, eventCategory?: string)
         return prevStep + 1
       })
     },
-    [eventCategory],
+    [],
   )
 
   const prevStep = useCallback(() => {
     setStep((prevStep) => {
       return prevStep - 1
     })
-  }, [eventCategory])
+  }, [])
 
   return { step, data, nextStep, prevStep }
 }

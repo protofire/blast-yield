@@ -36,7 +36,7 @@ const TxModalDialog = ({
             className={css.close}
             aria-label="close"
             onClick={(e) => {
-              onClose?.()
+              onClose?.(e, 'escapeKeyDown')
             }}
             size="small"
           >

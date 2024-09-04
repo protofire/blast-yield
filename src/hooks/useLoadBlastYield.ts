@@ -31,8 +31,10 @@ export const useLoadBlastYield = (): UseQueryResult<
       const yieldTokenArray = getBlastYieldTokens(+currentChainId);
       const calls = yieldTokenArray.map(async (token) => {
         return [
-          await web3ReadOnly.call(encodeGetYieldMode(safe.safeAddress, token)),
+          // @ts-ignore
+          await web3ReadOnly.call(encodeGetYieldMode(safe.safeAddress!, token)),
           await web3ReadOnly
+            // @ts-ignore
             .call(encodeGetClaimableYield(safe.safeAddress!, token))
             .catch(() => {
               return '0';
