@@ -37,10 +37,6 @@ const defaultParams: ClaimYieldParams = {
   amount: '',
 };
 
-enum PSEUDO_APPROVAL_VALUES {
-  UNLIMITED = 'Unlimited (not recommended)',
-}
-
 const ClaimYieldFlow = ({ txNonce, ...props }: ClaimYieldFlowProps) => {
   const params = {
     ...defaultParams,

@@ -12,7 +12,7 @@ import {
   Box,
 } from '@mui/material';
 import WarningIcon from '@/public/images/notifications/warning.svg';
-import { type ReactElement, useEffect, type SyntheticEvent } from 'react';
+import { type ReactElement, type SyntheticEvent } from 'react';
 
 export type ConfirmCopyModalProps = {
   open: boolean;

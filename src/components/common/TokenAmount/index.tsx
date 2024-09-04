@@ -3,7 +3,6 @@ import { TransferDirection } from '@safe-global/safe-gateway-typescript-sdk';
 // import css from './styles.module.css';
 import { formatVisualAmount } from '@/utils/formatters';
 import TokenIcon from '../TokenIcon';
-import classNames from 'classnames';
 
 const TokenAmount = ({
   value,

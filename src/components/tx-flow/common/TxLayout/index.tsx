@@ -10,9 +10,7 @@ import {
   Typography,
   Paper,
   SvgIcon,
-  useMediaQuery,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import type { TransactionSummary } from '@safe-global/safe-gateway-typescript-sdk';
 import SafeTxProvider from '../../SafeTxProvider';
 import css from './styles.module.css';
