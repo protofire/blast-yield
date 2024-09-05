@@ -21,21 +21,21 @@ const YieldTokenConfig = {
     decimals: 18,
     symbol: 'ETH',
     name: 'Ether',
-    logoUri: 'https://assets.blast-safe.io/contracts/logos/0x4300000000000000000000000000000000000002.png',
+    logoUri: 'https://yield.blast-safe.io/0x4300000000000000000000000000000000000002.png',
   },
   [YieldTokens.WETH]: {
     type: TokenType.ERC20,
     decimals: 18,
     symbol: 'WETH',
     name: 'WETH',
-    logoUri: 'https://assets.blast-safe.io/contracts/logos/0x4200000000000000000000000000000000000023.png',
+    logoUri: 'https://yield.blast-safe.io/0x4200000000000000000000000000000000000023.png',
   },
   [YieldTokens.USDB]: {
     type: TokenType.ERC20,
     decimals: 18,
     symbol: 'USDB',
     name: 'USDB',
-    logoUri: 'https://assets.blast-safe.io/contracts/logos/0x4200000000000000000000000000000000000022.png',
+    logoUri: 'https://yield.blast-safe.io/0x4200000000000000000000000000000000000022.png',
   },
 }
 
