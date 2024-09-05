@@ -229,7 +229,7 @@ export default function Home() {
 
   return (
     <Container className="h-[calc(100vh-32px)] w-full">
-      <Typography variant="h1" className="pb-6">Blast Yield</Typography>
+      <Typography variant="h1" className="pb-6 text-white">Blast Yield</Typography>
       <EnhancedTable rows={rows} headCells={headCells} />
     </Container>
   );
