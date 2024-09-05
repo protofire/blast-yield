@@ -22,13 +22,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { themeMode } = useThemeMode('dark');
+  const { themeMode } = useThemeMode("light");
   return (
     <html lang="en">
       <SafeThemeProvider mode={themeMode}>
         {(safeTheme: Theme) => (
           <ThemeProvider theme={safeTheme}>
-            <body className={inter.className + 'p-4 m-4 h-full'}>
+            <body className={inter.className + 'p-4 m-4 h-full bg-white'}>
               <QueryClientProvider client={queryClient}>
                 <SafeProvider
                   loader={

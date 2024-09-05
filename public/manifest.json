@@ -1,7 +1,7 @@
 {
-  "short_name": "Safe App",
-  "name": "Safe App Starter",
-  "description": "Describe your Safe App here",
+  "short_name": "Blast Yield",
+  "name": "Blast Yield",
+  "description": "Blast Yield is a yield aggregator for Blast",
   "icons": [
     {
       "src": "logo.svg",

@@ -140,7 +140,7 @@ function EnhancedTable({ rows, headCells, mobileVariant }: EnhancedTableProps) {
   );
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%' }} className="border border-gray-200 rounded-md">
       <TableContainer component={Paper} className="w-full mb-1">
         <Table
           aria-labelledby="tableTitle"
