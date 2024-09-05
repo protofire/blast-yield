@@ -22,7 +22,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { themeMode } = useThemeMode("light");
+  const { themeMode } = useThemeMode("dark");
   return (
     <html lang="en">
       <SafeThemeProvider mode={themeMode}>
