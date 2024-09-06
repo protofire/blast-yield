@@ -28,7 +28,7 @@ export default function RootLayout({
       <SafeThemeProvider mode={themeMode}>
         {(safeTheme: Theme) => (
           <ThemeProvider theme={safeTheme}>
-            <body className={inter.className + 'p-4 m-4 h-full bg-gray-200'}>
+            <body className={inter.className + 'p-4 m-4 h-full bg-[rgb(28,28,28)]'}>
               <QueryClientProvider client={queryClient}>
                 <SafeProvider
                   loader={
