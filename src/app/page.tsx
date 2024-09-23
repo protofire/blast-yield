@@ -101,7 +101,6 @@ const ClaimButton = ({
   mode: YieldMode;
   onClick: (tokenAddress: string) => void;
 }): ReactElement => {
-  const claimableMode = mode === YieldMode.CLAIMABLE;
   return (
     <>
       <Button
@@ -111,9 +110,9 @@ const ClaimButton = ({
         onClick={() => onClick(tokenInfo.address)}
         disabled={mode !== YieldMode.CLAIMABLE}
       >
-        Claim
+        {YIELD_LABELS[mode]}
       </Button>
-      <Tooltip title={'Yield mode is not claimable.'}>
+      <Tooltip title={YIELD_DESCRIPTION[mode]}>
         <IconButton size="medium">
           <InfoOutlinedIcon fontSize="small" />
         </IconButton>

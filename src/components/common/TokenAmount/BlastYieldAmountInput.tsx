@@ -7,7 +7,6 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import css from './styles.module.css';
 import {
   validateDecimalLength,
   validateLimitedAmount,
@@ -19,6 +18,9 @@ import type { BlastYieldResponse } from '@/config/yieldTokens';
 import { ClaimYieldFields } from '@/components/tx-flow/flows/BlastYieldClaim';
 import NumberField from '../NumberField';
 import { AutocompleteItem } from '../AutocompleteItem';
+
+import css from './styles.module.css';
+
 
 export enum YieldAmountFields {
   tokenAddress = 'tokenAddress',
