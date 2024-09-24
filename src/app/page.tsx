@@ -27,7 +27,9 @@ import {
 } from '@/config/yieldTokens';
 import { TxModalContext } from '@/components/tx-flow';
 import ClaimYieldFlow from '@/components/tx-flow/flows/BlastYieldClaim';
-import YieldModeChangeFlow from "@/components/tx-flow/flows/BlastYieldModeChange";
+import YieldModeChangeFlow from '@/components/tx-flow/flows/BlastYieldModeChange';
+import Link from 'next/link';
+import Image from "next/image";
 
 const skeletonCells: EnhancedTableProps['rows'][0]['cells'] = {
   asset: {
@@ -228,8 +230,34 @@ export default function Home() {
 
   return (
     <Container className="h-[calc(100vh-32px)] w-full">
-      <Typography variant="h1" className="pb-6 text-white">Blast Yield</Typography>
+      <Typography variant="h1" className="pb-6 text-white">
+        Blast Yield
+      </Typography>
       <EnhancedTable rows={rows} headCells={headCells} />
+      <Box
+        className="mt-4 text-white"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Link
+          href="https://protofire.io/services/safe-deployment"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <Typography variant="body2" mr={1}>
+              Supported by
+            </Typography>
+            <Image
+              src="/proto-logo.svg"
+              alt="ProtoFire Logo"
+              width={120}
+              height={60}
+            />
+          </Box>
+        </Link>
+      </Box>
     </Container>
   );
 }
