@@ -28,5 +28,6 @@
     "import/resolver": {
       "typescript": {}
     }
-  }
+  },
+  "ignorePatterns": ["node_modules/", ".next/", ".vercel/"]
 }

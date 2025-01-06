@@ -1,4 +1,4 @@
-import { parsePrefixedAddress, sameAddress, isChecksummedAddress } from './addresses';
+import { isChecksummedAddress } from './addresses';
 import { safeFormatUnits, safeParseUnits } from './formatters';
 
 export const validateAddress = (address: string): string | undefined => {
@@ -14,41 +14,6 @@ export const validateAddress = (address: string): string | undefined => {
 
   return undefined;
 };
-
-export const isValidAddress = (address: string): boolean => validateAddress(address) === undefined;
-
-export const validatePrefixedAddress =
-  (chainShortName?: string) =>
-  (value: string): string | undefined => {
-    const { prefix, address } = parsePrefixedAddress(value);
-
-    if (prefix) {
-      if (prefix !== chainShortName) {
-        return `"${prefix}" doesn't match the current chain`;
-      }
-    }
-
-    return validateAddress(address);
-  };
-
-export const uniqueAddress =
-  (addresses: string[] = []) =>
-  (address: string): string | undefined => {
-    const ADDRESS_REPEATED_ERROR = 'Address already added';
-    const addressExists = addresses.some((addressFromList) =>
-      sameAddress(addressFromList, address)
-    );
-    return addressExists ? ADDRESS_REPEATED_ERROR : undefined;
-  };
-
-export const addressIsNotCurrentSafe =
-  (safeAddress: string) =>
-  (address: string): string | undefined => {
-    const SIGNER_ADDRESS_IS_SAFE_ADDRESS_ERROR = 'Cannot use Safe Account itself as signer.';
-    return sameAddress(safeAddress, address) ? SIGNER_ADDRESS_IS_SAFE_ADDRESS_ERROR : undefined;
-  };
-
-export const FLOAT_REGEX = /^[0-9]+([,.][0-9]+)?$/;
 
 export const validateAmount = (
   amount?: string,
@@ -106,17 +71,4 @@ export const validateDecimalLength = (
   }
 
   return undefined;
-};
-
-export const isValidURL = (url: string, protocolsAllowed = ['https:']): boolean => {
-  try {
-    const urlInfo = new URL(url);
-
-    return (
-      protocolsAllowed.includes(urlInfo.protocol) ||
-      urlInfo.hostname.split('.').pop() === 'localhost'
-    );
-  } catch {
-    return false;
-  }
 };
