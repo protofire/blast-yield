@@ -1,18 +1,9 @@
-import {
-  type ComponentType,
-  type ReactElement,
-  type ReactNode,
-} from 'react';
-import {
-  Box,
-  Container,
-  Grid,
-  Typography,
-  Paper,
-  SvgIcon,
-} from '@mui/material';
+import { Box, Container, Grid, Typography, Paper, SvgIcon } from '@mui/material';
 import type { TransactionSummary } from '@safe-global/safe-gateway-typescript-sdk';
+import { type ComponentType, type ReactElement, type ReactNode } from 'react';
+
 import SafeTxProvider from '../../SafeTxProvider';
+
 import css from './styles.module.css';
 
 const TxLayoutHeader = ({
@@ -22,8 +13,8 @@ const TxLayoutHeader = ({
   hideNonce: TxLayoutProps['hideNonce'];
   icon: TxLayoutProps['icon'];
   subtitle: TxLayoutProps['subtitle'];
-}) => {
-  if (!icon && !subtitle) return null;
+}): ReactElement => {
+  if (!icon && !subtitle) return <></>;
 
   return (
     <Box className={css.headerInner}>
@@ -85,16 +76,10 @@ const TxLayout = ({
               </div>
 
               <Paper data-testid="modal-header" className={css.header}>
-                <TxLayoutHeader
-                  subtitle={subtitle}
-                  icon={icon}
-                  hideNonce={hideNonce}
-                />
+                <TxLayoutHeader subtitle={subtitle} icon={icon} hideNonce={hideNonce} />
               </Paper>
 
-              <div className={css.step}>
-                {children}
-              </div>
+              <div className={css.step}>{children}</div>
             </Grid>
           </Grid>
         </Container>

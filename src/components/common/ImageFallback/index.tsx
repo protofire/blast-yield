@@ -1,22 +1,16 @@
+import Image from 'next/image';
 import type { ReactElement } from 'react';
 import { useState } from 'react';
 
-type ImageAttributes = React.DetailedHTMLProps<
-  React.ImgHTMLAttributes<HTMLImageElement>,
-  HTMLImageElement
->;
+type ImageAttributes = Omit<React.ComponentProps<typeof Image>, 'src'>;
 
-type ImageFallbackProps = ImageAttributes &
-  (
-    | {
-        fallbackSrc: string;
-        fallbackComponent?: ReactElement;
-      }
-    | {
-        fallbackSrc?: string;
-        fallbackComponent: ReactElement;
-      }
-  );
+interface ImageFallbackProps extends ImageAttributes {
+  src?: string;
+  fallbackSrc: string;
+  fallbackComponent?: ReactElement;
+  width: number;
+  height: number;
+}
 
 const ImageFallback = ({
   src,
@@ -29,7 +23,7 @@ const ImageFallback = ({
   if (isError && fallbackComponent) return fallbackComponent;
 
   return (
-    <img
+    <Image
       {...props}
       alt={props.alt || ''}
       src={isError || src === undefined ? fallbackSrc : src}

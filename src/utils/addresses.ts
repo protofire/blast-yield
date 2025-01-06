@@ -56,10 +56,7 @@ export const parsePrefixedAddress = (value: string): PrefixedAddress => {
   };
 };
 
-export const formatPrefixedAddress = (
-  address: string,
-  prefix?: string
-): string => {
+export const formatPrefixedAddress = (address: string, prefix?: string): string => {
   return prefix ? `${prefix}:${address}` : address;
 };
 

@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
 import { Web3Provider } from '@ethersproject/providers';
-import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk';
 import { SafeAppProvider } from '@safe-global/safe-apps-provider';
+import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk';
+import { useEffect, useState } from 'react';
 
-function useWeb3() {
+function useWeb3(): { web3?: Web3Provider } {
   const [web3, setWeb3] = useState<Web3Provider | undefined>();
   const { safe, sdk } = useSafeAppsSDK();
 

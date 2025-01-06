@@ -1,6 +1,6 @@
-import type { ChangeEvent, ReactNode } from 'react';
-import React, { useState } from 'react';
+import { Collapse } from '@mui/material';
 import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import type { SortDirection } from '@mui/material/TableCell';
@@ -10,11 +10,10 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import classNames from 'classnames';
-
-import { Collapse } from '@mui/material';
+import React, { useState } from 'react';
+import type { ChangeEvent, ReactElement, ReactNode } from 'react';
 
 type EnhancedCell = {
   content: ReactNode;
@@ -36,20 +35,26 @@ type EnhancedHeadCell = {
   sticky?: boolean;
 };
 
-function descendingComparator(a: EnhancedRow, b: EnhancedRow, orderBy: string) {
-  if (b.cells[orderBy].rawValue < a.cells[orderBy].rawValue) {
+function descendingComparator(a: EnhancedRow, b: EnhancedRow, orderBy: string): number {
+  const aValue = a.cells[orderBy]?.rawValue ?? '';
+  const bValue = b.cells[orderBy]?.rawValue ?? '';
+
+  if (bValue < aValue) {
     return -1;
   }
-  if (b.cells[orderBy].rawValue > a.cells[orderBy].rawValue) {
+  if (bValue > aValue) {
     return 1;
   }
   return 0;
 }
 
-function getComparator(order: SortDirection, orderBy: string) {
+function getComparator(
+  order: SortDirection,
+  orderBy: string
+): (a: EnhancedRow, b: EnhancedRow) => number {
   return order === 'desc'
-    ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-    : (a: any, b: any) => -descendingComparator(a, b, orderBy);
+    ? (a: EnhancedRow, b: EnhancedRow): number => descendingComparator(a, b, orderBy)
+    : (a: EnhancedRow, b: EnhancedRow): number => -descendingComparator(a, b, orderBy);
 }
 
 type EnhancedTableHeadProps = {
@@ -59,9 +64,9 @@ type EnhancedTableHeadProps = {
   orderBy: string;
 };
 
-function EnhancedTableHead(props: EnhancedTableHeadProps) {
+function EnhancedTableHead(props: EnhancedTableHeadProps): ReactElement {
   const { headCells, order, orderBy, onRequestSort } = props;
-  const createSortHandler = (property: string) => () => {
+  const createSortHandler = (property: string) => (): void => {
     onRequestSort(property);
   };
 
@@ -87,9 +92,7 @@ function EnhancedTableHead(props: EnhancedTableHeadProps) {
                   {headCell.label}
                   {orderBy === headCell.id ? (
                     <Box component="span" sx={visuallyHidden}>
-                      {order === 'desc'
-                        ? 'sorted descending'
-                        : 'sorted ascending'}
+                      {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                     </Box>
                   ) : null}
                 </TableSortLabel>
@@ -108,44 +111,36 @@ export type EnhancedTableProps = {
   mobileVariant?: boolean;
 };
 
-const pageSizes = [10, 25, 100];
+const pageSizes: number[] = [10, 25, 100];
 
-function EnhancedTable({ rows, headCells, mobileVariant }: EnhancedTableProps) {
+function EnhancedTable({ rows, headCells, mobileVariant }: EnhancedTableProps): JSX.Element {
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<string>('');
   const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(pageSizes[1]);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(pageSizes[1] || 10);
 
-  const handleRequestSort = (property: string) => {
+  const handleRequestSort = (property: string): void => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleChangePage = (_: any, newPage: number) => {
+  const handleChangePage = (_: unknown, newPage: number): void => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>): void => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const orderedRows = orderBy
-    ? rows.slice().sort(getComparator(order, orderBy))
-    : rows;
-  const pagedRows = orderedRows.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
+  const orderedRows = orderBy ? rows.slice().sort(getComparator(order, orderBy)) : rows;
+  const pagedRows = orderedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <Box sx={{ width: '100%' }} className="border border-gray-200 rounded-md">
       <TableContainer component={Paper} className="w-full mb-1">
-        <Table
-          aria-labelledby="tableTitle"
-          className={mobileVariant ? 'mobileColumn' : ''}
-        >
+        <Table aria-labelledby="tableTitle" className={mobileVariant ? 'mobileColumn' : ''}>
           <EnhancedTableHead
             headCells={headCells}
             order={order}

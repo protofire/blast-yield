@@ -1,12 +1,13 @@
-import type { ReactNode } from 'react';
+import { Tooltip } from '@mui/material';
 import React, {
+  type ReactNode,
   type ReactElement,
   type SyntheticEvent,
   useCallback,
   useState,
 } from 'react';
-import { Tooltip } from '@mui/material';
-import ConfirmCopyModal from "./ConfirmCopyModal";
+
+import ConfirmCopyModal from './ConfirmCopyModal';
 
 const spanStyle = { cursor: 'pointer' };
 
@@ -40,9 +41,7 @@ const CopyTooltip = ({
       let timeout: NodeJS.Timeout | undefined;
 
       try {
-        navigator.clipboard
-          .writeText(text)
-          .then(() => setTooltipText('Copied'));
+        navigator.clipboard.writeText(text).then(() => setTooltipText('Copied'));
         setShowConfirmation(false);
         setShowTooltip(true);
         timeout = setTimeout(() => {
@@ -52,21 +51,14 @@ const CopyTooltip = ({
           }
         }, 750);
         onCopy?.();
-      } catch (err) {
+      } catch {
         setIsCopyEnabled(false);
         setTooltipText('Copying is disabled in your browser');
       }
 
-      return () => clearTimeout(timeout);
+      return (): void => clearTimeout(timeout);
     },
-    [
-      dialogContent,
-      showConfirmation,
-      text,
-      onCopy,
-      isCopyEnabled,
-      initialToolTipText,
-    ]
+    [dialogContent, showConfirmation, text, onCopy, isCopyEnabled, initialToolTipText]
   );
 
   return (

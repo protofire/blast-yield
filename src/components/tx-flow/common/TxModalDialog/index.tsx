@@ -1,17 +1,16 @@
-import { type ReactElement } from 'react'
-import { IconButton, Dialog, DialogTitle, type DialogProps } from '@mui/material'
-import classnames from 'classnames'
-import CloseIcon from '@mui/icons-material/Close'
-import css from './styles.module.css'
+import CloseIcon from '@mui/icons-material/Close';
+import { IconButton, Dialog, DialogTitle, type DialogProps } from '@mui/material';
+import classnames from 'classnames';
+import { type ReactElement } from 'react';
+
+import css from './styles.module.css';
 
 interface ModalDialogProps extends DialogProps {
-  dialogTitle?: React.ReactNode
-  hideChainIndicator?: boolean
+  children: React.ReactNode;
+  fullScreen?: boolean;
 }
 
 const TxModalDialog = ({
-  dialogTitle,
-  hideChainIndicator,
   children,
   onClose,
   fullScreen = false,
@@ -23,7 +22,7 @@ const TxModalDialog = ({
       {...restProps}
       fullScreen={true}
       scroll={fullScreen ? 'paper' : 'body'}
-      className={classnames(css.dialog, { [css.fullWidth]: fullWidth })}
+      className={classnames(css.dialog, fullWidth ? css.fullWidth : '')}
       onClick={(e) => e.stopPropagation()}
       hideBackdrop
       PaperProps={{
@@ -36,7 +35,7 @@ const TxModalDialog = ({
             className={css.close}
             aria-label="close"
             onClick={(e) => {
-              onClose?.(e, 'escapeKeyDown')
+              onClose?.(e, 'escapeKeyDown');
             }}
             size="small"
           >
@@ -47,7 +46,7 @@ const TxModalDialog = ({
 
       {children}
     </Dialog>
-  )
-}
+  );
+};
 
-export default TxModalDialog
+export default TxModalDialog;

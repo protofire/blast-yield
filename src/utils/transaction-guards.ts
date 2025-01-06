@@ -1,5 +1,4 @@
 import type {
-  AddressEx,
   BaselineConfirmationView,
   Cancellation,
   ConflictHeader,
@@ -32,7 +31,7 @@ import type {
   TransferInfo,
   TwapOrder,
   TwapOrderConfirmationView,
-} from '@safe-global/safe-gateway-typescript-sdk'
+} from '@safe-global/safe-gateway-typescript-sdk';
 import {
   ConfirmationViewTypes,
   ConflictType,
@@ -42,38 +41,39 @@ import {
   TransactionStatus,
   TransactionTokenType,
   TransferDirection,
-} from '@safe-global/safe-gateway-typescript-sdk'
-import { sameAddress } from './addresses'
+} from '@safe-global/safe-gateway-typescript-sdk';
 
-type NamedAddress = {
-  name: string
-  address: string
-  ens?: string
-}
+import { sameAddress } from './addresses';
 
 export const isTxQueued = (value: TransactionStatus): boolean => {
-  return [TransactionStatus.AWAITING_CONFIRMATIONS, TransactionStatus.AWAITING_EXECUTION].includes(value)
-}
+  return [TransactionStatus.AWAITING_CONFIRMATIONS, TransactionStatus.AWAITING_EXECUTION].includes(
+    value
+  );
+};
 
 export const isAwaitingExecution = (txStatus: TransactionStatus): boolean =>
-  TransactionStatus.AWAITING_EXECUTION === txStatus
+  TransactionStatus.AWAITING_EXECUTION === txStatus;
 
-export const isOwner = (safeOwners: string[] = [], walletAddress?: string) => {
-  return safeOwners.some((owner) => sameAddress(owner, walletAddress))
-}
+export const isOwner = (safeOwners: string[] = [], walletAddress?: string): boolean => {
+  return safeOwners.some((owner) => sameAddress(owner, walletAddress));
+};
 
-export const isMultisigDetailedExecutionInfo = (value?: DetailedExecutionInfo): value is MultisigExecutionDetails => {
-  return value?.type === DetailedExecutionInfoType.MULTISIG
-}
+export const isMultisigDetailedExecutionInfo = (
+  value?: DetailedExecutionInfo
+): value is MultisigExecutionDetails => {
+  return value?.type === DetailedExecutionInfoType.MULTISIG;
+};
 
-export const isModuleDetailedExecutionInfo = (value?: DetailedExecutionInfo): value is ModuleExecutionDetails => {
-  return value?.type === DetailedExecutionInfoType.MODULE
-}
+export const isModuleDetailedExecutionInfo = (
+  value?: DetailedExecutionInfo
+): value is ModuleExecutionDetails => {
+  return value?.type === DetailedExecutionInfoType.MODULE;
+};
 
 // TransactionInfo type guards
 export const isTransferTxInfo = (value: TransactionInfo): value is Transfer => {
-  return value.type === TransactionInfoType.TRANSFER || isSwapTransferOrderTxInfo(value)
-}
+  return value.type === TransactionInfoType.TRANSFER || isSwapTransferOrderTxInfo(value);
+};
 
 /**
  * A fulfillment transaction for swap, limit or twap order is always a SwapOrder
@@ -82,137 +82,143 @@ export const isTransferTxInfo = (value: TransactionInfo): value is Transfer => {
  * @param value
  */
 export const isSwapTransferOrderTxInfo = (value: TransactionInfo): value is SwapOrder => {
-  return value.type === TransactionInfoType.SWAP_TRANSFER
-}
+  return value.type === TransactionInfoType.SWAP_TRANSFER;
+};
 
 export const isSettingsChangeTxInfo = (value: TransactionInfo): value is SettingsChange => {
-  return value.type === TransactionInfoType.SETTINGS_CHANGE
-}
+  return value.type === TransactionInfoType.SETTINGS_CHANGE;
+};
 
 export const isCustomTxInfo = (value: TransactionInfo): value is Custom => {
-  return value.type === TransactionInfoType.CUSTOM
-}
+  return value.type === TransactionInfoType.CUSTOM;
+};
 
 export const isMultiSendTxInfo = (value: TransactionInfo): value is MultiSend => {
   return (
     value.type === TransactionInfoType.CUSTOM &&
     value.methodName === 'multiSend' &&
     typeof value.actionCount === 'number'
-  )
-}
+  );
+};
 
 export const isOrderTxInfo = (value: TransactionInfo): value is Order => {
-  return isSwapOrderTxInfo(value) || isTwapOrderTxInfo(value)
-}
+  return isSwapOrderTxInfo(value) || isTwapOrderTxInfo(value);
+};
 
 export const isSwapOrderTxInfo = (value: TransactionInfo): value is SwapOrder => {
-  return value.type === TransactionInfoType.SWAP_ORDER
-}
+  return value.type === TransactionInfoType.SWAP_ORDER;
+};
 
 export const isTwapOrderTxInfo = (value: TransactionInfo): value is TwapOrder => {
-  return value.type === TransactionInfoType.TWAP_ORDER
-}
+  return value.type === TransactionInfoType.TWAP_ORDER;
+};
 
 export const isConfirmationViewOrder = (
-  decodedData: DecodedDataResponse | BaselineConfirmationView | OrderConfirmationView | undefined,
+  decodedData: DecodedDataResponse | BaselineConfirmationView | OrderConfirmationView | undefined
 ): decodedData is OrderConfirmationView => {
-  return isSwapConfirmationViewOrder(decodedData) || isTwapConfirmationViewOrder(decodedData)
-}
+  return isSwapConfirmationViewOrder(decodedData) || isTwapConfirmationViewOrder(decodedData);
+};
 
 export const isTwapConfirmationViewOrder = (
-  decodedData: DecodedDataResponse | BaselineConfirmationView | OrderConfirmationView | undefined,
+  decodedData: DecodedDataResponse | BaselineConfirmationView | OrderConfirmationView | undefined
 ): decodedData is TwapOrderConfirmationView => {
   if (decodedData && 'type' in decodedData) {
-    return decodedData.type === ConfirmationViewTypes.COW_SWAP_TWAP_ORDER
+    return decodedData.type === ConfirmationViewTypes.COW_SWAP_TWAP_ORDER;
   }
 
-  return false
-}
+  return false;
+};
 
 export const isSwapConfirmationViewOrder = (
-  decodedData: DecodedDataResponse | BaselineConfirmationView | OrderConfirmationView | undefined,
+  decodedData: DecodedDataResponse | BaselineConfirmationView | OrderConfirmationView | undefined
 ): decodedData is SwapOrderConfirmationView => {
   if (decodedData && 'type' in decodedData) {
-    return decodedData.type === ConfirmationViewTypes.COW_SWAP_ORDER
+    return decodedData.type === ConfirmationViewTypes.COW_SWAP_ORDER;
   }
 
-  return false
-}
+  return false;
+};
 
-export const isCancelledSwapOrder = (value: TransactionInfo) => {
-  return isSwapOrderTxInfo(value) && value.status === 'cancelled'
-}
+export const isCancelledSwapOrder = (value: TransactionInfo): boolean => {
+  return isSwapOrderTxInfo(value) && value.status === 'cancelled';
+};
 
-export const isOpenSwapOrder = (value: TransactionInfo) => {
-  return isSwapOrderTxInfo(value) && value.status === 'open'
-}
+export const isOpenSwapOrder = (value: TransactionInfo): boolean => {
+  return isSwapOrderTxInfo(value) && value.status === 'open';
+};
 
 export const isCancellationTxInfo = (value: TransactionInfo): value is Cancellation => {
-  return isCustomTxInfo(value) && value.isCancellation
-}
+  return isCustomTxInfo(value) && value.isCancellation;
+};
 
 export const isCreationTxInfo = (value: TransactionInfo): value is Creation => {
-  return value.type === TransactionInfoType.CREATION
-}
+  return value.type === TransactionInfoType.CREATION;
+};
 
 export const isOutgoingTransfer = (txInfo: TransactionInfo): boolean => {
-  return isTransferTxInfo(txInfo) && txInfo.direction.toUpperCase() === TransferDirection.OUTGOING
-}
+  return isTransferTxInfo(txInfo) && txInfo.direction.toUpperCase() === TransferDirection.OUTGOING;
+};
 
 export const isIncomingTransfer = (txInfo: TransactionInfo): boolean => {
-  return isTransferTxInfo(txInfo) && txInfo.direction.toUpperCase() === TransferDirection.INCOMING
-}
+  return isTransferTxInfo(txInfo) && txInfo.direction.toUpperCase() === TransferDirection.INCOMING;
+};
 
 // TransactionListItem type guards
 export const isLabelListItem = (value: TransactionListItem): value is Label => {
-  return value.type === TransactionListItemType.LABEL
-}
+  return value.type === TransactionListItemType.LABEL;
+};
 
 export const isConflictHeaderListItem = (value: TransactionListItem): value is ConflictHeader => {
-  return value.type === TransactionListItemType.CONFLICT_HEADER
-}
+  return value.type === TransactionListItemType.CONFLICT_HEADER;
+};
 
 export const isDateLabel = (value: TransactionListItem): value is DateLabel => {
-  return value.type === TransactionListItemType.DATE_LABEL
-}
+  return value.type === TransactionListItemType.DATE_LABEL;
+};
 
 export const isTransactionListItem = (value: TransactionListItem): value is Transaction => {
-  return value.type === TransactionListItemType.TRANSACTION
-}
+  return value.type === TransactionListItemType.TRANSACTION;
+};
 
 // Narrows `Transaction`
 export const isMultisigExecutionInfo = (value?: ExecutionInfo): value is MultisigExecutionInfo =>
-  value?.type === DetailedExecutionInfoType.MULTISIG
+  value?.type === DetailedExecutionInfoType.MULTISIG;
 
 export const isModuleExecutionInfo = (value?: ExecutionInfo): value is ModuleExecutionInfo =>
-  value?.type === DetailedExecutionInfoType.MODULE
+  value?.type === DetailedExecutionInfoType.MODULE;
 
 export const isSignableBy = (txSummary: TransactionSummary, walletAddress: string): boolean => {
-  const executionInfo = isMultisigExecutionInfo(txSummary.executionInfo) ? txSummary.executionInfo : undefined
-  return !!executionInfo?.missingSigners?.some((address) => address.value === walletAddress)
-}
+  const executionInfo = isMultisigExecutionInfo(txSummary.executionInfo)
+    ? txSummary.executionInfo
+    : undefined;
+  return !!executionInfo?.missingSigners?.some((address) => address.value === walletAddress);
+};
 
 export const isConfirmableBy = (txSummary: TransactionSummary, walletAddress: string): boolean => {
   if (!txSummary.executionInfo || !isMultisigExecutionInfo(txSummary.executionInfo)) {
-    return false
+    return false;
   }
-  const { confirmationsRequired, confirmationsSubmitted } = txSummary.executionInfo
+  const { confirmationsRequired, confirmationsSubmitted } = txSummary.executionInfo;
   return (
     confirmationsSubmitted >= confirmationsRequired ||
     (confirmationsSubmitted === confirmationsRequired - 1 && isSignableBy(txSummary, walletAddress))
-  )
-}
+  );
+};
 
-export const isExecutable = (txSummary: TransactionSummary, walletAddress: string, safe: SafeInfo): boolean => {
+export const isExecutable = (
+  txSummary: TransactionSummary,
+  walletAddress: string,
+  safe: SafeInfo
+): boolean => {
   if (
     !txSummary.executionInfo ||
     !isMultisigExecutionInfo(txSummary.executionInfo) ||
     safe.nonce !== txSummary.executionInfo.nonce
   ) {
-    return false
+    return false;
   }
-  return isConfirmableBy(txSummary, walletAddress)
-}
+  return isConfirmableBy(txSummary, walletAddress);
+};
 
 // Spending limits
 enum SPENDING_LIMIT_METHODS_NAMES {
@@ -222,43 +228,43 @@ enum SPENDING_LIMIT_METHODS_NAMES {
   DELETE_ALLOWANCE = 'deleteAllowance',
 }
 
-export type SpendingLimitMethods = 'setAllowance' | 'deleteAllowance'
+export type SpendingLimitMethods = 'setAllowance' | 'deleteAllowance';
 
 export const isSetAllowance = (method?: string): method is SpendingLimitMethods => {
-  return method === SPENDING_LIMIT_METHODS_NAMES.SET_ALLOWANCE
-}
+  return method === SPENDING_LIMIT_METHODS_NAMES.SET_ALLOWANCE;
+};
 
 export const isDeleteAllowance = (method?: string): method is SpendingLimitMethods => {
-  return method === SPENDING_LIMIT_METHODS_NAMES.DELETE_ALLOWANCE
-}
+  return method === SPENDING_LIMIT_METHODS_NAMES.DELETE_ALLOWANCE;
+};
 
 export const isSpendingLimitMethod = (method?: string): boolean => {
-  return isSetAllowance(method) || isDeleteAllowance(method)
-}
+  return isSetAllowance(method) || isDeleteAllowance(method);
+};
 
 // Method parameter types
-export const isArrayParameter = (parameter: string): boolean => /(\[\d*?])+$/.test(parameter)
-export const isAddress = (type: string): boolean => type.indexOf('address') === 0
-export const isByte = (type: string): boolean => type.indexOf('byte') === 0
+export const isArrayParameter = (parameter: string): boolean => /(\[\d*?])+$/.test(parameter);
+export const isAddress = (type: string): boolean => type.indexOf('address') === 0;
+export const isByte = (type: string): boolean => type.indexOf('byte') === 0;
 
-export const isNoneConflictType = (transaction: Transaction) => {
-  return transaction.conflictType === ConflictType.NONE
-}
-export const isHasNextConflictType = (transaction: Transaction) => {
-  return transaction.conflictType === ConflictType.HAS_NEXT
-}
-export const isEndConflictType = (transaction: Transaction) => {
-  return transaction.conflictType === ConflictType.END
-}
+export const isNoneConflictType = (transaction: Transaction): boolean => {
+  return transaction.conflictType === ConflictType.NONE;
+};
+export const isHasNextConflictType = (transaction: Transaction): boolean => {
+  return transaction.conflictType === ConflictType.HAS_NEXT;
+};
+export const isEndConflictType = (transaction: Transaction): boolean => {
+  return transaction.conflictType === ConflictType.END;
+};
 
 export const isNativeTokenTransfer = (value: TransferInfo): value is NativeCoinTransfer => {
-  return value.type === TransactionTokenType.NATIVE_COIN
-}
+  return value.type === TransactionTokenType.NATIVE_COIN;
+};
 
 export const isERC20Transfer = (value: TransferInfo): value is Erc20Transfer => {
-  return value.type === TransactionTokenType.ERC20
-}
+  return value.type === TransactionTokenType.ERC20;
+};
 
 export const isERC721Transfer = (value: TransferInfo): value is Erc721Transfer => {
-  return value.type === TransactionTokenType.ERC721
-}
+  return value.type === TransactionTokenType.ERC721;
+};

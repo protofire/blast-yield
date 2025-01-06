@@ -1,26 +1,17 @@
-import { safeFormatUnits } from '@/utils/formatters';
-import {
-  Button,
-  Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  TextField,
-} from '@mui/material';
-import {
-  validateDecimalLength,
-  validateLimitedAmount,
-} from '@/utils/validation';
-import { useFormContext } from 'react-hook-form';
+import { Button, Divider, FormControl, InputLabel, MenuItem, TextField } from '@mui/material';
 import classNames from 'classnames';
-import { useCallback } from 'react';
-import type { BlastYieldResponse } from '@/config/yieldTokens';
+import { ReactElement, useCallback } from 'react';
+import { useFormContext } from 'react-hook-form';
+
 import { ClaimYieldFields } from '@/components/tx-flow/flows/BlastYieldClaim';
-import NumberField from '../NumberField';
+import type { BlastYieldResponse } from '@/config/yieldTokens';
+import { safeFormatUnits } from '@/utils/formatters';
+import { validateDecimalLength, validateLimitedAmount } from '@/utils/validation';
+
 import { AutocompleteItem } from '../AutocompleteItem';
+import NumberField from '../NumberField';
 
 import css from './styles.module.css';
-
 
 export enum YieldAmountFields {
   tokenAddress = 'tokenAddress',
@@ -37,7 +28,7 @@ const BlastYieldAmountInput = ({
   selectedToken: BlastYieldResponse['items'][number] | undefined;
   maxAmount?: bigint;
   validate?: (value: string) => string | undefined;
-}) => {
+}): ReactElement => {
   const {
     formState: { errors },
     register,
@@ -51,8 +42,7 @@ const BlastYieldAmountInput = ({
 
   const tokenAddress = watch(ClaimYieldFields.tokenAddress);
   const isAmountError =
-    !!errors[ClaimYieldFields.tokenAddress] ||
-    !!errors[ClaimYieldFields.amount];
+    !!errors[ClaimYieldFields.tokenAddress] || !!errors[ClaimYieldFields.amount];
 
   const validateAmount = useCallback(
     (value: string) => {
@@ -80,7 +70,7 @@ const BlastYieldAmountInput = ({
   return (
     <FormControl
       data-testid="token-amount-section"
-      className={classNames(css.outline, { [css.error]: isAmountError })}
+      className={classNames(css.outline, { [css.error as string]: isAmountError })}
       fullWidth
     >
       <InputLabel shrink required className={css.label}>
@@ -95,11 +85,7 @@ const BlastYieldAmountInput = ({
           InputProps={{
             disableUnderline: true,
             endAdornment: maxAmount !== undefined && (
-              <Button
-                data-testid="max-btn"
-                className={css.max}
-                onClick={onMaxAmountClick}
-              >
+              <Button data-testid="max-btn" className={css.max} onClick={onMaxAmountClick}>
                 Max
               </Button>
             ),
@@ -136,9 +122,7 @@ const BlastYieldAmountInput = ({
               key={item.tokenInfo.address}
               value={item.tokenInfo.address}
             >
-              <AutocompleteItem
-                {...{ ...item, claimableField: item.claimableYield }}
-              />
+              <AutocompleteItem {...{ ...item, claimableField: item.claimableYield }} />
             </MenuItem>
           ))}
         </TextField>

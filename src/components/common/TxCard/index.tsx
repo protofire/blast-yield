@@ -1,15 +1,16 @@
-import type { ReactNode } from 'react'
-import { Card, CardContent } from '@mui/material'
-import css from './styles.module.css'
+import { Card, CardContent } from '@mui/material';
+import type { ReactElement, ReactNode } from 'react';
 
-const sx = { my: 2, border: 0 }
+import css from './styles.module.css';
 
-const TxCard = ({ children }: { children: ReactNode }) => {
+const sx = { my: 2, border: 0 };
+
+const TxCard = ({ children }: { children: ReactNode }): ReactElement => {
   return (
     <Card sx={sx}>
       <CardContent className={css.cardContent}>{children}</CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default TxCard
+export default TxCard;
