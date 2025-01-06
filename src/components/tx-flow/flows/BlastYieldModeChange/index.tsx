@@ -1,12 +1,3 @@
-import TxLayout from '@/components/tx-flow/common/TxLayout';
-import {
-  YIELD_DESCRIPTION,
-  YIELD_LABELS,
-  YieldMode,
-} from '@/config/yieldTokens';
-import type { TokenInfo } from '@safe-global/safe-apps-sdk';
-import TxCard from '@/components/common/TxCard';
-import { encodeChangeYieldMode } from '@/utils/yield';
 import {
   SelectChangeEvent,
   Box,
@@ -18,8 +9,15 @@ import {
   Button,
 } from '@mui/material';
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk';
+import type { TokenInfo } from '@safe-global/safe-apps-sdk';
 import Link from 'next/link';
 import { useState, useContext, SyntheticEvent } from 'react';
+
+import TxCard from '@/components/common/TxCard';
+import TxLayout from '@/components/tx-flow/common/TxLayout';
+import { YIELD_DESCRIPTION, YIELD_LABELS, YieldMode } from '@/config/yieldTokens';
+import { encodeChangeYieldMode } from '@/utils/yield';
+
 import { TxModalContext } from '../..';
 
 export type YieldModeChangeProps = {
@@ -33,19 +31,17 @@ const options = [
   { value: YieldMode.CLAIMABLE, label: YIELD_LABELS[YieldMode.CLAIMABLE] },
 ];
 
-const YieldModeChangeFlow = (params: YieldModeChangeProps) => {
-  const [selectedMode, setSelectedMode] = useState<YieldMode>(
-    params.newMode ?? YieldMode.VOID
-  );
+const YieldModeChangeFlow = (params: YieldModeChangeProps): React.ReactElement => {
+  const [selectedMode, setSelectedMode] = useState<YieldMode>(params.newMode ?? YieldMode.VOID);
   const { token } = params;
   const { sdk } = useSafeAppsSDK();
   const { setTxFlow } = useContext(TxModalContext);
 
-  const handleChange = (event: SelectChangeEvent<YieldMode>) => {
+  const handleChange = (event: SelectChangeEvent<YieldMode>): void => {
     setSelectedMode(event.target.value as YieldMode);
   };
 
-  const onSubmitHandler = (e: SyntheticEvent) => {
+  const onSubmitHandler = (e: SyntheticEvent): void => {
     e.preventDefault();
     const txData = encodeChangeYieldMode(selectedMode, token);
     sdk.txs.send({ txs: [txData] }).finally(() => {

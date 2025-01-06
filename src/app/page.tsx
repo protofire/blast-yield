@@ -1,35 +1,21 @@
 'use client';
 
-import { useContext, type ReactElement } from 'react';
-import {
-  Button,
-  Typography,
-  Skeleton,
-  Box,
-  IconButton,
-  Tooltip,
-  Container,
-} from '@mui/material';
-import type { TokenInfo } from '@safe-global/safe-gateway-typescript-sdk';
-import { TokenType } from '@safe-global/safe-gateway-typescript-sdk';
-import TokenAmount from '@/components/common/TokenAmount';
-import TokenIcon from '@/components/common/TokenIcon';
-import EnhancedTable, {
-  type EnhancedTableProps,
-} from '@/components/common/EnhancedTable';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import useLoadBlastYield from '@/hooks/useLoadBlastYield';
-import {
-  YIELD_DESCRIPTION,
-  YIELD_LABELS,
-  YieldMode,
-} from '@/config/yieldTokens';
+import { Button, Typography, Skeleton, Box, IconButton, Tooltip, Container } from '@mui/material';
+import type { TokenInfo } from '@safe-global/safe-gateway-typescript-sdk';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useContext, type ReactElement } from 'react';
+
+import EnhancedTable, { type EnhancedTableProps } from '@/components/common/EnhancedTable';
+import TokenAmount from '@/components/common/TokenAmount';
+import TokenIcon from '@/components/common/TokenIcon';
 import { TxModalContext } from '@/components/tx-flow';
 import ClaimYieldFlow from '@/components/tx-flow/flows/BlastYieldClaim';
 import YieldModeChangeFlow from '@/components/tx-flow/flows/BlastYieldModeChange';
-import Link from 'next/link';
-import Image from "next/image";
+import { YIELD_DESCRIPTION, YIELD_LABELS, YieldMode } from '@/config/yieldTokens';
+import { useLoadBlastYield } from '@/hooks/useLoadBlastYield';
 
 const skeletonCells: EnhancedTableProps['rows'][0]['cells'] = {
   asset: {
@@ -70,11 +56,7 @@ const skeletonRows: EnhancedTableProps['rows'] = Array(3).fill({
   cells: skeletonCells,
 });
 
-const isNativeToken = (tokenInfo: TokenInfo) => {
-  return tokenInfo.type === TokenType.NATIVE_TOKEN;
-};
-
-const headCells = [
+const headCells: EnhancedTableProps['headCells'] = [
   {
     id: 'asset',
     label: 'Asset',
@@ -137,20 +119,20 @@ const EditYieldModeButton = ({
   );
 };
 
-export default function Home() {
+export default function Home(): ReactElement {
   const { data: balances, isLoading: loading } = useLoadBlastYield();
 
   const { setTxFlow } = useContext(TxModalContext);
 
-  const onClaimClick = (tokenAddress: string) => {
+  const onClaimClick = (tokenAddress: string): void => {
     setTxFlow(<ClaimYieldFlow tokenAddress={tokenAddress} />);
   };
 
-  const onChangeYieldModeClick = (token: TokenInfo, newMode: YieldMode) => {
+  const onChangeYieldModeClick = (token: TokenInfo, newMode: YieldMode): void => {
     setTxFlow(<YieldModeChangeFlow token={token} newMode={newMode} />);
   };
 
-  const rows = loading
+  const rows: EnhancedTableProps['rows'] = loading
     ? skeletonRows
     : (balances?.items || []).map((item) => {
         return {
@@ -160,10 +142,7 @@ export default function Home() {
               rawValue: item.tokenInfo.name,
               content: (
                 <div className="flex items-center space-x-3">
-                  <TokenIcon
-                    logoUri={item.tokenInfo.logoUri}
-                    tokenSymbol={item.tokenInfo.symbol}
-                  />
+                  <TokenIcon logoUri={item.tokenInfo.logoUri} tokenSymbol={item.tokenInfo.symbol} />
                   <Typography>{item.tokenInfo.name}</Typography>
                 </div>
               ),
@@ -171,15 +150,8 @@ export default function Home() {
             yieldMode: {
               rawValue: item.mode,
               content: (
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  gap={1}
-                  alignItems="center"
-                >
-                  <Typography sx={{ minWidth: '100px' }}>
-                    {YIELD_LABELS[item.mode]}
-                  </Typography>
+                <Box display="flex" flexDirection="row" gap={1} alignItems="center">
+                  <Typography sx={{ minWidth: '100px' }}>{YIELD_LABELS[item.mode]}</Typography>
                   <Tooltip title={YIELD_DESCRIPTION[item.mode]}>
                     <IconButton size="medium">
                       <InfoOutlinedIcon fontSize="small" />
@@ -187,9 +159,7 @@ export default function Home() {
                   </Tooltip>
                   <EditYieldModeButton
                     tokenInfo={item.tokenInfo}
-                    onClick={() =>
-                      onChangeYieldModeClick(item.tokenInfo, item.mode)
-                    }
+                    onClick={() => onChangeYieldModeClick(item.tokenInfo, item.mode)}
                   />
                 </Box>
               ),
@@ -197,12 +167,7 @@ export default function Home() {
             yield: {
               rawValue: item.claimableYield,
               content: (
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  gap={1}
-                  alignItems="center"
-                >
+                <Box display="flex" flexDirection="row" gap={1} alignItems="center">
                   <TokenAmount
                     value={item.claimableYield}
                     decimals={item.tokenInfo.decimals}
@@ -234,12 +199,7 @@ export default function Home() {
         Blast Yield
       </Typography>
       <EnhancedTable rows={rows} headCells={headCells} />
-      <Box
-        className="mt-4 text-white"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
+      <Box className="mt-4 text-white" display="flex" alignItems="center" justifyContent="center">
         <Link
           href="https://protofire.io/services/safe-deployment"
           target="_blank"
@@ -249,12 +209,7 @@ export default function Home() {
             <Typography variant="body2" mr={1}>
               Supported by
             </Typography>
-            <Image
-              src="/proto-logo.svg"
-              alt="ProtoFire Logo"
-              width={120}
-              height={60}
-            />
+            <Image src="/proto-logo.svg" alt="ProtoFire Logo" width={120} height={60} />
           </Box>
         </Link>
       </Box>

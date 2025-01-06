@@ -1,9 +1,9 @@
 import { TextField } from '@mui/material';
-import { forwardRef } from 'react';
 import type { TextFieldProps } from '@mui/material';
+import { forwardRef } from 'react';
 import type { ReactElement } from 'react';
 
-export const _formatNumber = (value: string) => {
+export const _formatNumber = (value: string): string => {
   value = value.trim();
 
   if (value === '') {
@@ -49,10 +49,7 @@ const NumberField = forwardRef<HTMLInputElement, TextFieldProps>(
           // Autocomplete passes `onChange` in `inputProps`
           onChange: (event) => {
             // inputProps['onChange'] is generically typed
-            if (
-              'value' in event.target &&
-              typeof event.target.value === 'string'
-            ) {
+            if ('value' in event.target && typeof event.target.value === 'string') {
               event.target.value = _formatNumber(event.target.value);
               return props.inputProps?.onChange?.(event);
             }

@@ -1,7 +1,9 @@
-import { type ReactElement } from 'react';
 import { TransferDirection } from '@safe-global/safe-gateway-typescript-sdk';
+import { type ReactElement } from 'react';
+
 // import css from './styles.module.css';
 import { formatVisualAmount } from '@/utils/formatters';
+
 import TokenIcon from '../TokenIcon';
 
 const TokenAmount = ({
@@ -24,14 +26,10 @@ const TokenAmount = ({
 
   return (
     <span
-      // className={classNames(css.container, { [css.verticalAlign]: logoUri })}
+    // className={classNames(css.container, { [css.verticalAlign]: logoUri })}
     >
       {logoUri && (
-        <TokenIcon
-          logoUri={logoUri}
-          tokenSymbol={tokenSymbol}
-          fallbackSrc={fallbackSrc}
-        />
+        <TokenIcon logoUri={logoUri} tokenSymbol={tokenSymbol} fallbackSrc={fallbackSrc} />
       )}
       <b>
         {sign}

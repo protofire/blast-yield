@@ -1,8 +1,9 @@
-import { type ReactElement } from 'react'
-// import css from './styles.module.css'
-import ImageFallback from "../ImageFallback"
+import { type ReactElement } from 'react';
 
-const FALLBACK_ICON = '/token-placeholder.svg'
+// import css from './styles.module.css'
+import ImageFallback from '../ImageFallback';
+
+const FALLBACK_ICON = '/token-placeholder.svg';
 
 const TokenIcon = ({
   logoUri,
@@ -10,20 +11,21 @@ const TokenIcon = ({
   size = 26,
   fallbackSrc,
 }: {
-  logoUri?: string
-  tokenSymbol?: string
-  size?: number
-  fallbackSrc?: string
+  logoUri?: string;
+  tokenSymbol?: string;
+  size?: number;
+  fallbackSrc?: string;
 }): ReactElement => {
   return (
     <ImageFallback
       src={logoUri}
-      alt={tokenSymbol}
+      alt={tokenSymbol || ''}
       fallbackSrc={`${fallbackSrc}` || FALLBACK_ICON}
       height={size}
+      width={size}
       className="h-8 w-8 rounded-full"
     />
-  )
-}
+  );
+};
 
-export default TokenIcon
+export default TokenIcon;

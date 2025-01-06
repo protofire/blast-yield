@@ -1,1 +1,1 @@
-export const POLLING_INTERVAL = 15_000
+export const POLLING_INTERVAL = 15_000;

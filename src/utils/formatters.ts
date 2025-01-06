@@ -1,5 +1,6 @@
 import type { BigNumberish } from 'ethers';
 import { formatUnits, parseUnits } from 'ethers';
+
 import { formatAmount } from './formatNumber';
 
 const GWEI = 'gwei';
@@ -15,10 +16,7 @@ export const _removeTrailingZeros = (value: string): string => {
  * @param decimals decimals of the specified value or unit name
  * @returns value at specified decimals, i.e. 0.000000000000000001
  */
-export const safeFormatUnits = (
-  value: BigNumberish,
-  decimals: number | string = GWEI
-): string => {
+export const safeFormatUnits = (value: BigNumberish, decimals: number | string = GWEI): string => {
   try {
     const formattedAmount = formatUnits(value, decimals);
 
@@ -64,15 +62,11 @@ export const shortenAddress = (address: string, length = 4): string => {
   return `${address.slice(0, length + 2)}...${address.slice(-length)}`;
 };
 
-export const shortenText = (
-  text: string,
-  length = 10,
-  separator = '...'
-): string => {
+export const shortenText = (text: string, length = 10, separator = '...'): string => {
   return `${text.slice(0, length)}${separator}`;
 };
 
-export const dateString = (date: number) => {
+export const dateString = (date: number): string => {
   const formatterOptions: Intl.DateTimeFormatOptions = {
     month: 'numeric',
     day: 'numeric',
@@ -81,9 +75,7 @@ export const dateString = (date: number) => {
     minute: 'numeric',
     second: 'numeric',
   };
-  return new Intl.DateTimeFormat(undefined, formatterOptions).format(
-    new Date(date)
-  );
+  return new Intl.DateTimeFormat(undefined, formatterOptions).format(new Date(date));
 };
 
 export const camelCaseToSpaces = (str: string): string => {

@@ -1,13 +1,13 @@
-import type { TokenInfo } from '@safe-global/safe-gateway-typescript-sdk'
-import { TokenType } from '@safe-global/safe-gateway-typescript-sdk'
+import type { TokenInfo } from '@safe-global/safe-gateway-typescript-sdk';
+import { TokenType } from '@safe-global/safe-gateway-typescript-sdk';
 
 export type BlastYieldResponse = {
   items: Array<{
-    tokenInfo: TokenInfo
-    claimableYield: string
-    mode: YieldMode
-  }>
-}
+    tokenInfo: TokenInfo;
+    claimableYield: string;
+    mode: YieldMode;
+  }>;
+};
 
 enum YieldTokens {
   BLAST_ETH,
@@ -37,7 +37,7 @@ const YieldTokenConfig = {
     name: 'USDB',
     logoUri: '/0x4200000000000000000000000000000000000022.png',
   },
-}
+};
 
 export function getBlastYieldTokens(chainId: number): TokenInfo[] {
   switch (chainId) {
@@ -55,7 +55,7 @@ export function getBlastYieldTokens(chainId: number): TokenInfo[] {
           ...YieldTokenConfig[YieldTokens.WETH],
           address: '0x4300000000000000000000000000000000000004',
         },
-      ]
+      ];
     default:
       return [
         {
@@ -70,7 +70,7 @@ export function getBlastYieldTokens(chainId: number): TokenInfo[] {
           ...YieldTokenConfig[YieldTokens.USDB],
           address: '0x4200000000000000000000000000000000000022',
         },
-      ]
+      ];
   }
 }
 
@@ -80,20 +80,16 @@ export enum YieldMode {
   CLAIMABLE,
 }
 
-export const YieldModeSelectorValues = [
-  YieldMode.AUTOMATIC,
-  YieldMode.VOID,
-  YieldMode.CLAIMABLE,
-]
+export const YieldModeSelectorValues = [YieldMode.AUTOMATIC, YieldMode.VOID, YieldMode.CLAIMABLE];
 
 export const YIELD_LABELS = {
   [YieldMode.VOID]: 'Void',
   [YieldMode.AUTOMATIC]: 'Automatic',
   [YieldMode.CLAIMABLE]: 'Claimable',
-}
+};
 
 export const YIELD_DESCRIPTION = {
   [YieldMode.VOID]: 'Balance never changes. No yield is earned.',
   [YieldMode.AUTOMATIC]: 'Balance rebases (increasing only).',
   [YieldMode.CLAIMABLE]: 'Balance never changes. Yield accumulates separately.',
-}
+};

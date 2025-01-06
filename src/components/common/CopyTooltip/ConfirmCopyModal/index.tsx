@@ -11,8 +11,9 @@ import {
   Button,
   Box,
 } from '@mui/material';
-import WarningIcon from '@/public/images/notifications/warning.svg';
 import { type ReactElement, type SyntheticEvent } from 'react';
+
+import WarningIcon from '../../../../../public/warning.svg';
 
 export type ConfirmCopyModalProps = {
   open: boolean;
@@ -26,7 +27,7 @@ const ConfirmCopyModal = ({
   onClose,
   onCopy,
   children,
-}: ConfirmCopyModalProps) => {
+}: ConfirmCopyModalProps): ReactElement => {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
@@ -37,20 +38,11 @@ const ConfirmCopyModal = ({
           alignItems="center"
           gap={1}
         >
-          <SvgIcon
-            component={WarningIcon}
-            inheritViewBox
-            color="warning"
-            sx={{ mb: -0.4 }}
-          />
+          <SvgIcon component={WarningIcon} inheritViewBox color="warning" sx={{ mb: -0.4 }} />
           <Typography variant="h6" fontWeight={700}>
             Before you copy
           </Typography>
-          <IconButton
-            aria-label="close"
-            onClick={onClose}
-            sx={{ marginLeft: 'auto' }}
-          >
+          <IconButton aria-label="close" onClick={onClose} sx={{ marginLeft: 'auto' }}>
             <Close />
           </IconButton>
         </Box>
@@ -59,12 +51,7 @@ const ConfirmCopyModal = ({
       <DialogContent>{children}</DialogContent>
       <Divider />
       <DialogActions sx={{ padding: 3 }}>
-        <Button
-          size="small"
-          variant="outlined"
-          color="primary"
-          onClick={onCopy}
-        >
+        <Button size="small" variant="outlined" color="primary" onClick={onCopy}>
           Proceed and copy
         </Button>
       </DialogActions>

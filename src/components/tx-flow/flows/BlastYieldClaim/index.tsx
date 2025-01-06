@@ -1,18 +1,20 @@
-import { ZERO_ADDRESS } from '@safe-global/protocol-kit/dist/src/utils/constants';
-import TxLayout from '../../common/TxLayout';
-import TxCard from '@/components/common/TxCard';
-import { YieldMode } from '@/config/yieldTokens';
 import { FormControl, TextField, Divider, Box, Button } from '@mui/material';
-import { FormProvider, useForm } from 'react-hook-form';
-import useLoadBlastYield from '@/hooks/useLoadBlastYield';
-import { encodeClaimYield } from '@/utils/yield';
+import { ZERO_ADDRESS } from '@safe-global/protocol-kit/dist/src/utils/constants';
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk';
 import { useContext } from 'react';
-import commonCss from '@/components/tx-flow/common/styles.module.css';
+import { FormProvider, useForm } from 'react-hook-form';
+
 import BlastYieldAmountInput, {
   YieldAmountFields,
 } from '@/components/common/TokenAmount/BlastYieldAmountInput';
-import { TxModalContext } from "../..";
+import TxCard from '@/components/common/TxCard';
+import commonCss from '@/components/tx-flow/common/styles.module.css';
+import { YieldMode } from '@/config/yieldTokens';
+import { useLoadBlastYield } from '@/hooks/useLoadBlastYield';
+import { encodeClaimYield } from '@/utils/yield';
+
+import { TxModalContext } from '../..';
+import TxLayout from '../../common/TxLayout';
 
 enum Fields {
   recipient = 'recipient',
@@ -37,7 +39,7 @@ const defaultParams: ClaimYieldParams = {
   amount: '',
 };
 
-const ClaimYieldFlow = ({ txNonce, ...props }: ClaimYieldFlowProps) => {
+const ClaimYieldFlow = (props: ClaimYieldFlowProps): React.ReactElement => {
   const params = {
     ...defaultParams,
     ...props,
@@ -48,9 +50,7 @@ const ClaimYieldFlow = ({ txNonce, ...props }: ClaimYieldFlowProps) => {
     safe: { safeAddress },
     sdk,
   } = useSafeAppsSDK();
-  const token = balances?.items.find(
-    (item) => item.tokenInfo.address === params.tokenAddress
-  );
+  const token = balances?.items.find((item) => item.tokenInfo.address === params.tokenAddress);
   const formMethods = useForm<ClaimYieldParams>({
     defaultValues: {
       [ClaimYieldFields.amount]: '0',
@@ -73,19 +73,12 @@ const ClaimYieldFlow = ({ txNonce, ...props }: ClaimYieldFlowProps) => {
 
   const isAddressValid = !!recipient && !errors[ClaimYieldFields.recipient];
 
-  const selectedToken = balances?.items.find(
-    (item) => item.tokenInfo.address === tokenAddress
-  );
+  const selectedToken = balances?.items.find((item) => item.tokenInfo.address === tokenAddress);
   const maxAmount = selectedToken?.claimableYield;
 
-  const submit = (data: ClaimYieldParams) => {
+  const submit = (data: ClaimYieldParams): void => {
     if (!token) return;
-    const txParams = encodeClaimYield(
-      safeAddress,
-      data.recipient,
-      token.tokenInfo,
-      data.amount
-    );
+    const txParams = encodeClaimYield(safeAddress, data.recipient, token.tokenInfo, data.amount);
     sdk.txs.send({ txs: [txParams] }).finally(() => {
       setTxFlow(undefined);
     });
