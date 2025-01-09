@@ -21,9 +21,6 @@ export const useLoadBlastYield = (): UseQueryResult<BlastYieldResponse, Error> =
       if (!safe.safeAddress || !web3ReadOnly) return { items: [] };
       const yieldTokenArray = getBlastYieldTokens(+currentChainId);
       const calls = yieldTokenArray.map(async (token) => {
-        if (!token.address) {
-          throw new Error('Token address is required');
-        }
         return [
           await web3ReadOnly.call(encodeGetYieldMode(safe.safeAddress!, token)),
           await web3ReadOnly.call(encodeGetClaimableYield(safe.safeAddress!, token)).catch(() => {

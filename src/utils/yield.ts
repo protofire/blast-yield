@@ -97,6 +97,10 @@ export const encodeClaimYield = (
 
   const functionName = token.type === TokenType.NATIVE_TOKEN ? 'claimYield' : 'claim';
 
+  if (Number(amount) <= 0) {
+    throw new Error('Amount must be greater than 0');
+  }
+
   const functionABI = `function ${functionName}${
     token.type === TokenType.NATIVE_TOKEN
       ? '(address contractAddress, address recipientOfYield, uint256 amount)'
